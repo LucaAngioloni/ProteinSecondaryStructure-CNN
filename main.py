@@ -19,12 +19,12 @@ amino_acid_residues = 22
 num_classes = 9
 
 
-def Q8_score(data, real, pred):
+def Q8_score(real, pred):
     total = real.shape[0]*real.shape[1]
     correct = 0
     for i in range(real.shape[0]):
         for j in range(real.shape[1]):
-            if data[i,j,amino_acid_residues-1] > 0:
+            if real[i,j,num_classes-1] > 0:
                 total = total - 1
             else:
                 if real[i,j,np.argmax(pred[i,j,:])] > 0:
@@ -84,4 +84,4 @@ else:
 predictions = model.predict(X_test)
 
 print("\n\nQ8 accuracy:")
-print(Q8_score(X_test, Y_test, predictions))
+print(Q8_score(Y_test, predictions))
