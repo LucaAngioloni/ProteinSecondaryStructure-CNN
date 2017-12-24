@@ -105,3 +105,6 @@ ENV/
 
 #dataset
 dataset/*.npy
+
+#logs
+logs/
