@@ -2,4 +2,4 @@
 
 The dataset can be downloaded at:
 
-(This link)[http://www.princeton.edu/~jzthree/datasets/ICML2014/]
+[This link](http://www.princeton.edu/~jzthree/datasets/ICML2014/)
