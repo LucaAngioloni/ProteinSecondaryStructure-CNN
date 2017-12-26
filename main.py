@@ -3,13 +3,16 @@ from time import time
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv1D, AveragePooling1D, MaxPooling1D, TimeDistributed
 from keras import optimizers, callbacks
+from keras.regularizers import l2
 
-do_log = False
+from timeit import default_timer as timer
 
-LR = 1e-3
-drop_out = 0.4
-batch_dim = 64
-nn_epochs = 10
+do_log = True
+
+LR = 0.001
+drop_out = 0.5
+batch_dim = 128
+nn_epochs = 40
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
 
@@ -17,7 +20,6 @@ sequence_len = 700
 total_features = 57
 amino_acid_residues = 22
 num_classes = 9
-
 
 def Q8_score(real, pred):
     total = real.shape[0]*real.shape[1]
@@ -35,13 +37,16 @@ def Q8_score(real, pred):
 def CNN_model():
     m = Sequential()
     m.add(Conv1D(128, 5, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
-    m.add(AveragePooling1D(pool_size=2, strides=1, padding='same'))
+    m.add(MaxPooling1D(pool_size=5, strides=1, padding='same'))
     m.add(Dropout(drop_out))
-    m.add(Conv1D(128, 5, padding='same', activation='relu'))
-    m.add(AveragePooling1D(pool_size=2, strides=1, padding='same'))
+    m.add(Conv1D(64, 5, padding='same', activation='relu'))
+    m.add(MaxPooling1D(pool_size=5, strides=1, padding='same'))
     m.add(Dropout(drop_out))
     m.add(Conv1D(64, 3, padding='same', activation='relu'))
-    m.add(AveragePooling1D(pool_size=4, strides=1, padding='same'))
+    m.add(MaxPooling1D(pool_size=3, strides=1, padding='same'))
+    m.add(Dropout(drop_out))
+    m.add(TimeDistributed(Dense(32, activation='relu')))
+    m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
     m.add(Dropout(drop_out))
     m.add(TimeDistributed(Dense(num_classes, activation='softmax', name='output')))
     opt = optimizers.Adam(lr=LR)
@@ -52,6 +57,7 @@ def CNN_model():
 
     return m
 
+start_time = timer()
 
 dataset = np.load(dataset_path)
 dataset = np.reshape(dataset, (dataset.shape[0], sequence_len, total_features))
@@ -77,7 +83,7 @@ model = CNN_model()
 if do_log:
     model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True, validation_data=(X_val, Y_val),
           callbacks=[
-              callbacks.TensorBoard(log_dir="logs/test/{}".format(time()), histogram_freq=1, write_graph=True)])
+              callbacks.TensorBoard(log_dir="logs/test/{}".format(time()), histogram_freq=1, write_graph=True), callbacks.EarlyStopping(monitor='val_loss', min_delta=0.005, patience=1, verbose=0, mode='auto')])
 else:
     model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True, validation_data=(X_val, Y_val))
 
@@ -85,3 +91,8 @@ predictions = model.predict(X_test)
 
 print("\n\nQ8 accuracy:")
 print(Q8_score(Y_test, predictions))
+
+end_time = timer()
+
+print("Time elapsed: " + str(end_time - start_time))
+
