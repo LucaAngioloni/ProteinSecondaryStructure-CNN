@@ -7,12 +7,12 @@ from keras.regularizers import l2
 
 from timeit import default_timer as timer
 
-do_log = True
+do_log = False
 
 LR = 0.001
 drop_out = 0.5
 batch_dim = 128
-nn_epochs = 40
+nn_epochs = 4
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
 
@@ -20,6 +20,29 @@ sequence_len = 700
 total_features = 57
 amino_acid_residues = 22
 num_classes = 9
+
+def get_dataset():
+    ds = np.load(dataset_path)
+    ds = np.reshape(ds, (ds.shape[0], sequence_len, total_features))
+    ds = ds[:, :, 0:amino_acid_residues + num_classes]  # remove unnecessary features
+    return ds
+
+def get_data_labels(D):
+    X = D[:, :, 0:amino_acid_residues]
+    Y = D[:, :, amino_acid_residues:amino_acid_residues + num_classes]
+    return X, Y
+
+def split_like_paper(Dataset):
+    # Dataset subdivision following dataset readme and paper
+    Train = Dataset[0:5600, :, :]
+    Test = Dataset[5600:5877, :, :]
+    Validation = Dataset[5877:, :, :]
+    return Train, Test, Validation
+
+def split_with_shuffle(Dataset, seed = None):
+    np.random.seed(seed)
+    np.random.shuffle(Dataset)
+    return split_like_paper(Dataset)
 
 def Q8_score(real, pred):
     total = real.shape[0]*real.shape[1]
@@ -33,6 +56,9 @@ def Q8_score(real, pred):
                     correct = correct + 1
 
     return correct/total
+
+def Q8_score_Tensor(real, pred):
+    pass
 
 def CNN_model():
     m = Sequential()
@@ -59,33 +85,24 @@ def CNN_model():
 
 start_time = timer()
 
-dataset = np.load(dataset_path)
-dataset = np.reshape(dataset, (dataset.shape[0], sequence_len, total_features))
-dataset = dataset[:, :, 0:amino_acid_residues + num_classes]  # remove unnecessary features
+dataset = get_dataset()
 
-# shuffle maybe?
+D_train, D_test, D_val = split_with_shuffle(dataset, 10)
 
-X = dataset[:, :, 0:amino_acid_residues]
-Y = dataset[:, :, amino_acid_residues:amino_acid_residues + num_classes]
-
-# Dataset subdivision following dataset readme and paper
-X_train = X[0:5600, :, :]
-Y_train = Y[0:5600, :, :]
-
-X_test = X[5600:5877, :, :]
-Y_test = Y[5600:5877, :, :]
-
-X_val = X[5877:, :, :]
-Y_val = Y[5877:, :, :]
+X_train, Y_train = get_data_labels(D_train)
+X_test, Y_test = get_data_labels(D_test)
+X_val, Y_val = get_data_labels(D_val)
 
 model = CNN_model()
+
+early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0.05, patience=0, verbose=0, mode='min')
 
 if do_log:
     model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True, validation_data=(X_val, Y_val),
           callbacks=[
-              callbacks.TensorBoard(log_dir="logs/test/{}".format(time()), histogram_freq=1, write_graph=True), callbacks.EarlyStopping(monitor='val_loss', min_delta=0.005, patience=1, verbose=0, mode='auto')])
+              callbacks.TensorBoard(log_dir="logs/test/{}".format(time()), histogram_freq=1, write_graph=True), early_stop])
 else:
-    model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True, validation_data=(X_val, Y_val))
+    model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True, validation_data=(X_val, Y_val), callbacks=[early_stop])
 
 predictions = model.predict(X_test)
 
