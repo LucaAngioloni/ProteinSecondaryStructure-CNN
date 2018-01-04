@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2017 Luca Angioloni
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import numpy as np
 from time import time
 from keras.models import Sequential
@@ -11,8 +33,8 @@ from timeit import default_timer as timer
 do_log = False
 
 LR = 0.001
-drop_out = 0.5
-batch_dim = 128
+drop_out = 0.4
+batch_dim = 64
 nn_epochs = 40
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
@@ -71,10 +93,10 @@ def Q8_score_Tensor(y_true, y_pred):
 
 def CNN_model():
     m = Sequential()
-    m.add(Conv1D(128, 5, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    m.add(Conv1D(64, 5, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
     m.add(MaxPooling1D(pool_size=5, strides=1, padding='same'))
     m.add(Dropout(drop_out))
-    m.add(Conv1D(64, 5, padding='same', activation='relu'))
+    m.add(Conv1D(32, 5, padding='same', activation='relu'))
     m.add(MaxPooling1D(pool_size=5, strides=1, padding='same'))
     m.add(Dropout(drop_out))
     m.add(TimeDistributed(Dense(32, activation='relu')))
