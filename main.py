@@ -92,11 +92,14 @@ def Q8_score_Tensor(y_true, y_pred):
 
 
 def CNN_model():
+    # We fix the window size to 11 because the average length of an alpha helix is around eleven residues
+    # and that of a beta strand is around six.
+    # ref: https://www.researchgate.net/publication/285648102_Protein_Secondary_Structure_Prediction_Using_Deep_Convolutional_Neural_Fields
     m = Sequential()
-    m.add(Conv1D(64, 5, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    m.add(Conv1D(64, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
     m.add(MaxPooling1D(pool_size=5, strides=1, padding='same'))
     m.add(Dropout(drop_out))
-    m.add(Conv1D(32, 5, padding='same', activation='relu'))
+    m.add(Conv1D(32, 11, padding='same', activation='relu'))
     m.add(MaxPooling1D(pool_size=5, strides=1, padding='same'))
     m.add(Dropout(drop_out))
     m.add(TimeDistributed(Dense(32, activation='relu')))
