@@ -109,11 +109,17 @@ def CNN_model():
     opt = optimizers.Adam(lr=LR)
     m.compile(optimizer=opt,
               loss='categorical_crossentropy',
-              metrics=['accuracy'])
+              metrics=['accuracy', 'mae'])
     m.summary()
 
     return m
 
+
+print("Hyper Parameters\n")
+print("Learning Rate: " + str(LR))
+print("Drop out: " + str(drop_out))
+print("Batch dim: " + str(batch_dim))
+print("Number of epochs: " + str(nn_epochs))
 
 start_time = timer()
 
@@ -151,3 +157,22 @@ print(Q8_score(Y_test, predictions))
 end_time = timer()
 
 print("Time elapsed: " + str(end_time - start_time))
+
+import matplotlib.pyplot as plt
+
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+

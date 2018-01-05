@@ -82,7 +82,7 @@ def CNN_model():
     opt = optimizers.Adam(lr=LR)
     m.compile(optimizer=opt,
               loss='categorical_crossentropy',
-              metrics=['accuracy'])
+              metrics=['accuracy', 'mae'])
     m.summary()
 
     return m
@@ -102,7 +102,7 @@ def CNN_model_new():
     opt = optimizers.Adam(lr=LR)
     m.compile(optimizer=opt,
               loss='categorical_crossentropy',
-              metrics=['accuracy'])
+              metrics=['accuracy', 'mae'])
     m.summary()
 
     return m

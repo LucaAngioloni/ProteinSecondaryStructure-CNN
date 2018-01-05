@@ -23,7 +23,7 @@
 import numpy as np
 from time import time
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Conv1D, AveragePooling1D, MaxPooling1D, TimeDistributed, LeakyReLU
+from keras.layers import Dense, Dropout, Conv1D, AveragePooling1D, MaxPooling1D, TimeDistributed, LeakyReLU, BatchNormalization
 from keras import optimizers, callbacks
 from keras.regularizers import l2
 import keras.backend as K
@@ -31,6 +31,7 @@ import keras.backend as K
 from timeit import default_timer as timer
 
 do_log = False
+show_plots = True
 
 LR = 0.002
 drop_out = 0.4
@@ -96,10 +97,12 @@ def CNN_model():
     # and that of a beta strand is around six.
     # ref: https://www.researchgate.net/publication/285648102_Protein_Secondary_Structure_Prediction_Using_Deep_Convolutional_Neural_Fields
     m = Sequential()
-    m.add(Conv1D(88, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    m.add(Conv1D(128, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    #m.add(BatchNormalization())
     #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
     m.add(Dropout(drop_out))
-    m.add(Conv1D(44, 11, padding='same', activation='relu'))
+    m.add(Conv1D(64, 11, padding='same', activation='relu'))
+    #m.add(BatchNormalization())
     #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
     m.add(Dropout(drop_out))
     # m.add(Conv1D(22, 11, padding='same', activation='relu'))
@@ -110,11 +113,17 @@ def CNN_model():
     opt = optimizers.Adam(lr=LR)
     m.compile(optimizer=opt,
               loss='categorical_crossentropy',
-              metrics=['accuracy'])
+              metrics=['accuracy', 'mae'])
     m.summary()
 
     return m
 
+
+print("Hyper Parameters\n")
+print("Learning Rate: " + str(LR))
+print("Drop out: " + str(drop_out))
+print("Batch dim: " + str(batch_dim))
+print("Number of epochs: " + str(nn_epochs))
 
 start_time = timer()
 
@@ -153,3 +162,30 @@ print(Q8_score(Y_test, predictions))
 end_time = timer()
 
 print("Time elapsed: " + str(end_time - start_time))
+
+if show_plots:
+    import matplotlib.pyplot as plt
+
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.show()
+    # summarize history for loss
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.show()
+    # summarize history for error
+    plt.plot(history.history['mean_absolute_error'])
+    plt.plot(history.history['val_mean_absolute_error'])
+    plt.title('model mean_absolute_error')
+    plt.ylabel('mean_absolute_error')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.show()
