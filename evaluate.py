@@ -1,25 +1,3 @@
-# MIT License
-#
-# Copyright (c) 2017 Luca Angioloni
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 import numpy as np
 from time import time
 from keras.models import Sequential
@@ -32,10 +10,10 @@ from timeit import default_timer as timer
 
 do_log = False
 
-LR = 0.001
+LR = 0.002
 drop_out = 0.4
-batch_dim = 64
-nn_epochs = 40
+batch_dim = 32
+nn_epochs = 50
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
 
@@ -86,11 +64,6 @@ def Q8_score(real, pred):
     return correct / total
 
 
-def Q8_score_Tensor(y_true, y_pred):
-    # test
-    pass
-
-
 def CNN_model():
     # We fix the window size to 11 because the average length of an alpha helix is around eleven residues
     # and that of a beta strand is around six.
@@ -115,7 +88,24 @@ def CNN_model():
     return m
 
 
-start_time = timer()
+def CNN_model_new():
+    # We fix the window size to 11 because the average length of an alpha helix is around eleven residues
+    # and that of a beta strand is around six.
+    # ref: https://www.researchgate.net/publication/285648102_Protein_Secondary_Structure_Prediction_Using_Deep_Convolutional_Neural_Fields
+    m = Sequential()
+    m.add(Conv1D(88, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    m.add(Dropout(drop_out))
+    m.add(Conv1D(44, 11, padding='same', activation='relu'))
+    m.add(Dropout(drop_out))
+    m.add(Conv1D(num_classes, 11, padding='same', activation='softmax'))
+
+    opt = optimizers.Adam(lr=LR)
+    m.compile(optimizer=opt,
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+    m.summary()
+
+    return m
 
 dataset = get_dataset()
 
@@ -125,23 +115,10 @@ X_train, Y_train = get_data_labels(D_train)
 X_test, Y_test = get_data_labels(D_test)
 X_val, Y_val = get_data_labels(D_val)
 
-model = CNN_model()
+model = CNN_model_new()
 
-early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0.005, patience=0, verbose=0, mode='min')
-
-filepath="Model-{epoch:02d}-{val_acc:.2f}.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-
-history = None
-
-if do_log:
-    history = model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[checkpoint,
-            callbacks.TensorBoard(log_dir="logs/test/{}".format(time()), histogram_freq=1, write_graph=True),
-            early_stop])
-else:
-    history = model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[checkpoint, early_stop])
+#load Weights
+model.load_weights("NewModel-best.hdf5")
 
 predictions = model.predict(X_test)
 

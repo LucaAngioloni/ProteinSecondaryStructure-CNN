@@ -30,7 +30,7 @@ import keras.backend as K
 
 from timeit import default_timer as timer
 
-do_log = True
+do_log = False
 
 LR = 0.002
 drop_out = 0.4
@@ -97,7 +97,9 @@ def CNN_model():
     # ref: https://www.researchgate.net/publication/285648102_Protein_Secondary_Structure_Prediction_Using_Deep_Convolutional_Neural_Fields
     m = Sequential()
     m.add(Conv1D(88, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    m.add(Dropout(drop_out))
     m.add(Conv1D(44, 11, padding='same', activation='relu'))
+    m.add(Dropout(drop_out))
     m.add(Conv1D(num_classes, 11, padding='same', activation='softmax'))
 
     opt = optimizers.Adam(lr=LR)
@@ -113,7 +115,7 @@ start_time = timer()
 
 dataset = get_dataset()
 
-D_train, D_test, D_val = split_with_shuffle(dataset)
+D_train, D_test, D_val = split_with_shuffle(dataset, 100)
 
 X_train, Y_train = get_data_labels(D_train)
 X_test, Y_test = get_data_labels(D_test)
@@ -121,18 +123,22 @@ X_val, Y_val = get_data_labels(D_val)
 
 model = CNN_model()
 
-early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='min')
+early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=1, verbose=0, mode='min')
+
+#filepath="NewModel-{epoch:02d}-{val_acc:.2f}.hdf5"
+filepath="NewModel-best.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
 history = None
 
 if do_log:
     history = model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[
+                        validation_data=(X_val, Y_val), callbacks=[checkpoint,
             callbacks.TensorBoard(log_dir="logs/newtest/{}".format(time()), histogram_freq=1, write_graph=True),
             early_stop])
 else:
     history = model.fit(X_train, Y_train, epochs=nn_epochs, batch_size=batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[early_stop])
+                        validation_data=(X_val, Y_val), callbacks=[checkpoint, early_stop])
 
 predictions = model.predict(X_test)
 
