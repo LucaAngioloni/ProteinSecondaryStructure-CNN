@@ -97,9 +97,14 @@ def CNN_model():
     # ref: https://www.researchgate.net/publication/285648102_Protein_Secondary_Structure_Prediction_Using_Deep_Convolutional_Neural_Fields
     m = Sequential()
     m.add(Conv1D(88, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
     m.add(Dropout(drop_out))
     m.add(Conv1D(44, 11, padding='same', activation='relu'))
+    #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
     m.add(Dropout(drop_out))
+    # m.add(Conv1D(22, 11, padding='same', activation='relu'))
+    # #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
+    # m.add(Dropout(drop_out))
     m.add(Conv1D(num_classes, 11, padding='same', activation='softmax'))
 
     opt = optimizers.Adam(lr=LR)
@@ -127,7 +132,7 @@ early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=1
 
 #filepath="NewModel-{epoch:02d}-{val_acc:.2f}.hdf5"
 filepath="NewModel-best.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+checkpoint = callbacks.ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
 history = None
 

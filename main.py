@@ -130,7 +130,7 @@ model = CNN_model()
 early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0.005, patience=0, verbose=0, mode='min')
 
 filepath="Model-{epoch:02d}-{val_acc:.2f}.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+checkpoint = callbacks.ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
 history = None
 
