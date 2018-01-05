@@ -37,7 +37,7 @@ X_val, Y_val = get_data_labels(D_val)
 model = model.CNN_model()
 
 #load Weights
-model.load_weights("Best Models/NewModel-best-05890-acc08791.hdf5")
+model.load_weights("Best Models/NewModel-best-05919-acc08788.hdf5")
 
 predictions = model.predict(X_test)
 

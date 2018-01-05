@@ -57,8 +57,7 @@ print("\n\nTime elapsed: " + "{0:.2f}".format((end_time - start_time)) + " s")
 
 predictions = net.predict(X_test)
 
-print("\n\nQ8 accuracy:")
-print(Q8_score(Y_test, predictions))
+print("\n\nQ8 accuracy: " + str(Q8_score(Y_test, predictions)) + "\n\n")
 
 if show_plots:
     from plot_history import plot_history

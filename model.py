@@ -37,6 +37,12 @@ drop_out = 0.4
 batch_dim = 32
 nn_epochs = 40
 
+#loss = 'categorical_hinge' # ok
+#loss = 'categorical_crossentropy' # best standart
+#loss = 'mean_absolute_error' # bad
+loss = 'mean_squared_logarithmic_error' # new best (a little better)
+
+
 early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=1, verbose=0, mode='min')
 
 #filepath="NewModel-{epoch:02d}-{val_acc:.2f}.hdf5"
@@ -63,7 +69,7 @@ def CNN_model():
 
     opt = optimizers.Adam(lr=LR)
     m.compile(optimizer=opt,
-              loss='categorical_crossentropy',
+              loss=loss,
               metrics=['accuracy', 'mae'])
     if do_summary:
         print("\nHyper Parameters\n")
@@ -71,6 +77,7 @@ def CNN_model():
         print("Drop out: " + str(drop_out))
         print("Batch dim: " + str(batch_dim))
         print("Number of epochs: " + str(nn_epochs))
+        print("\nLoss: " + loss + "\n")
 
         m.summary()
 
