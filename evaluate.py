@@ -89,14 +89,21 @@ def CNN_model():
 
 
 def CNN_model_new():
-    # We fix the window size to 11 because the average length of an alpha helix is around eleven residues
+        # We fix the window size to 11 because the average length of an alpha helix is around eleven residues
     # and that of a beta strand is around six.
     # ref: https://www.researchgate.net/publication/285648102_Protein_Secondary_Structure_Prediction_Using_Deep_Convolutional_Neural_Fields
     m = Sequential()
-    m.add(Conv1D(88, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    m.add(Conv1D(128, 11, padding='same', activation='relu', input_shape=(sequence_len, amino_acid_residues)))
+    #m.add(BatchNormalization())
+    #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
     m.add(Dropout(drop_out))
-    m.add(Conv1D(44, 11, padding='same', activation='relu'))
+    m.add(Conv1D(64, 11, padding='same', activation='relu'))
+    #m.add(BatchNormalization())
+    #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
     m.add(Dropout(drop_out))
+    # m.add(Conv1D(22, 11, padding='same', activation='relu'))
+    # #m.add(MaxPooling1D(pool_size=2, strides=1, padding='same'))
+    # m.add(Dropout(drop_out))
     m.add(Conv1D(num_classes, 11, padding='same', activation='softmax'))
 
     opt = optimizers.Adam(lr=LR)
@@ -118,13 +125,10 @@ X_val, Y_val = get_data_labels(D_val)
 model = CNN_model_new()
 
 #load Weights
-model.load_weights("NewModel-best.hdf5")
+model.load_weights("NewModel-best-05890-acc08791.hdf5")
 
 predictions = model.predict(X_test)
 
 print("\n\nQ8 accuracy:")
 print(Q8_score(Y_test, predictions))
 
-end_time = timer()
-
-print("Time elapsed: " + str(end_time - start_time))
