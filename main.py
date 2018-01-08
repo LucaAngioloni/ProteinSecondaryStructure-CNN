@@ -23,7 +23,7 @@
 import numpy as np
 from keras import optimizers, callbacks
 from timeit import default_timer as timer
-from dataset import get_dataset, split_with_shuffle, get_data_labels, Q8_score, split_like_paper
+from dataset import get_dataset, split_with_shuffle, get_data_labels, split_like_paper
 import model
 
 do_log = False
@@ -57,7 +57,7 @@ print("\n\nTime elapsed: " + "{0:.2f}".format((end_time - start_time)) + " s")
 
 predictions = net.predict(X_test)
 
-print("\n\nQ8 accuracy: " + str(Q8_score(Y_test, predictions)) + "\n\n")
+print("\n\nQ8 accuracy: " + str(model.Q8_accuracy(Y_test, predictions)) + "\n\n")
 
 if show_plots:
     from plot_history import plot_history

@@ -21,7 +21,6 @@
 # SOFTWARE.
 
 import numpy as np
-import keras.backend as K
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
 
@@ -56,25 +55,6 @@ def split_with_shuffle(Dataset, seed=None):
     np.random.seed(seed)
     np.random.shuffle(Dataset)
     return split_like_paper(Dataset)
-
-
-def Q8_score(real, pred):
-    total = real.shape[0] * real.shape[1]
-    correct = 0
-    for i in range(real.shape[0]):
-        for j in range(real.shape[1]):
-            if real[i,j,num_classes - 1] > 0:  # np.sum(real[i, j, :]) == 0
-                total = total - 1
-            else:
-                if real[i, j, np.argmax(pred[i, j, :])] > 0:
-                    correct = correct + 1
-
-    return correct / total
-
-
-def Q8_score_Tensor(y_true, y_pred):
-    # test
-    pass
 
 
 if __name__ == '__main__':
