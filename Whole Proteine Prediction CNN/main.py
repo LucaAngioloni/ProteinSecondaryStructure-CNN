@@ -23,21 +23,19 @@
 import numpy as np
 from keras import optimizers, callbacks
 from timeit import default_timer as timer
-from dataset import get_dataset_reshaped, split_dataset
+from dataset import get_dataset, split_with_shuffle, get_data_labels, split_like_paper
 import model
 
 do_log = False
 show_plots = True
 
-start_time = timer()
+dataset = get_dataset()
 
-print("Collecting Dataset...")
+D_train, D_test, D_val = split_with_shuffle(dataset, 100)
 
-X, Y = get_dataset_reshaped()
-X_train, X_val, X_test, Y_train, Y_val, Y_test = split_dataset(X, Y, seed=100)
-
-end_time = timer()
-print("\n\nTime elapsed getting Dataset: " + "{0:.2f}".format((end_time - start_time)) + " s")
+X_train, Y_train = get_data_labels(D_train)
+X_test, Y_test = get_data_labels(D_test)
+X_val, Y_val = get_data_labels(D_val)
 
 net = model.CNN_model()
 
@@ -57,9 +55,9 @@ else:
 end_time = timer()
 print("\n\nTime elapsed: " + "{0:.2f}".format((end_time - start_time)) + " s")
 
-scores = net.evaluate(X_test, Y_test)
-print("Loss: " + str(scores[0]) + ", Accuracy: " + str(scores[1]) + ", MAE: " + str(scores[2]))
-#print(scores)
+predictions = net.predict(X_test)
+
+print("\n\nQ8 accuracy: " + str(model.Q8_accuracy(Y_test, predictions)) + "\n\n")
 
 if show_plots:
     from plot_history import plot_history
