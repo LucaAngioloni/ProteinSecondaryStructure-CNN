@@ -29,6 +29,9 @@ from sklearn.model_selection import train_test_split
 
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
+# dataset_path = "dataset/cullpdb+profile_6133_filtered.npy"
+
+cb513_path = "dataset/cb513+profile_split1.npy"
 
 sequence_len = 700
 total_features = 57
@@ -36,11 +39,11 @@ amino_acid_residues = 21
 num_classes = 8
 
 
-cnn_width = 15
+cnn_width = 23
 
 
-def get_dataset():
-    ds = np.load(dataset_path)
+def get_dataset(path="dataset/cullpdb+profile_6133.npy"):
+    ds = np.load(path)
     ds = np.reshape(ds, (ds.shape[0], sequence_len, total_features))
     ds = ds[:, :, 0:amino_acid_residues+ 1 + num_classes]  # remove unnecessary features
     return ds
@@ -90,6 +93,35 @@ def split_dataset(X, Y, seed=None):
     X_tv, X_test, Y_tv, Y_test = train_test_split(X, Y, test_size=0.2, random_state=seed)
     X_train, X_validation, Y_train, Y_validation = train_test_split(X_tv, Y_tv, test_size=0.1, random_state=seed)
     return X_train, X_validation, X_test, Y_train, Y_validation, Y_test
+
+def split_like_paper(Dataset):
+    # Dataset subdivision following dataset readme and paper
+    Train = Dataset[0:5600, :, :]
+    Test = Dataset[5600:5877, :, :]
+    Validation = Dataset[5877:, :, :]
+    return Train, Test, Validation
+
+def get_resphaped_dataset_paper():
+    D = get_dataset()
+    Train, Test, Validation = split_like_paper(D)
+    X_te, Y_te = get_data_labels(Test)
+    X_tr, Y_tr = get_data_labels(Train)
+    X_v, Y_v = get_data_labels(Validation)
+
+    X_train = reshape_data(X_tr)
+    X_test = reshape_data(X_te)
+    X_validation = reshape_data(X_v)
+
+    Y_train = resphape_labels(Y_tr)
+    Y_test = resphape_labels(Y_te)
+    Y_validation = resphape_labels(Y_v)
+
+    return X_train, X_validation, X_test, Y_train, Y_validation, Y_test
+
+def get_cb513():
+    CB = get_dataset(cb513_path)
+    X, Y = get_data_labels(CB)
+    return reshape_data(X), resphape_labels(Y)
 
 
 if __name__ == '__main__':

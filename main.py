@@ -24,7 +24,7 @@ import numpy as np
 from time import time
 from keras import optimizers, callbacks
 from timeit import default_timer as timer
-from dataset import get_dataset_reshaped, split_dataset
+from dataset import get_dataset_reshaped, split_dataset, get_resphaped_dataset_paper, get_cb513
 import model
 
 do_log = True
@@ -35,8 +35,10 @@ start_time = timer()
 
 print("Collecting Dataset...")
 
-X, Y = get_dataset_reshaped()
-X_train, X_val, X_test, Y_train, Y_val, Y_test = split_dataset(X, Y, seed=100)
+# X, Y = get_dataset_reshaped()
+# X_train, X_val, X_test, Y_train, Y_val, Y_test = split_dataset(X, Y, seed=100)
+
+X_train, X_val, X_test, Y_train, Y_val, Y_test = get_resphaped_dataset_paper()
 
 end_time = timer()
 print("\n\nTime elapsed getting Dataset: " + "{0:.2f}".format((end_time - start_time)) + " s")
@@ -50,7 +52,7 @@ history = None
 call_b = [model.checkpoint]
 
 if do_log:
-	call_b.append(callbacks.TensorBoard(log_dir="logs/convconvnet/{}".format(time()), histogram_freq=0, write_graph=False))
+	call_b.append(callbacks.TensorBoard(log_dir="logs/convconvnet/{}".format(time()), histogram_freq=0, write_graph=True))
 
 if stop_early:
 	call_b.append(model.early_stop)
