@@ -20,8 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# Labels distribution
+# [2.46622e+05, 1.33650e+04, 2.77949e+05, 4.99050e+04, 2.32000e+02, 4.39649e+05, 1.06033e+05, 1.44579e+05]
+# [1.92924541e-01, 1.04550141e-02, 2.17430656e-01, 3.90390931e-02, 1.81486216e-04, 3.43923419e-01, 8.29462410e-02, 1.13099550e-01]
+
 import numpy as np
 from sklearn.model_selection import train_test_split
+
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
 
@@ -31,7 +36,7 @@ amino_acid_residues = 21
 num_classes = 8
 
 
-cnn_width = 23
+cnn_width = 15
 
 
 def get_dataset():
@@ -47,36 +52,29 @@ def get_data_labels(D):
     return X, Y
 
 
-# def split_like_paper(Dataset):
-#     # Dataset subdivision following dataset readme and paper
-#     Train = Dataset[0:5600, :, :]
-#     Test = Dataset[5600:5877, :, :]
-#     Validation = Dataset[5877:, :, :]
-#     return Train, Test, Validation
-
-
-# def split_with_shuffle(Dataset, seed=None):
-#     np.random.seed(seed)
-#     np.random.shuffle(Dataset)
-#     return split_like_paper(Dataset)
-
 def resphape_labels(labels):
     Y = np.reshape(labels, (labels.shape[0]*labels.shape[1], labels.shape[2]))
     Y = Y[~np.all(Y == 0, axis=1)]
     return Y
+
 
 def reshape_data(X):
     # final shape should be (1278334, cnn_width, amino_acid_residues)
     padding = np.zeros((X.shape[0], X.shape[2], int(cnn_width/2)))
     X = np.dstack((padding, np.swapaxes(X, 1, 2), padding))
     X = np.swapaxes(X, 1, 2)
+    # print("XShape after padding")
+    # print(X.shape)
     res = np.zeros((X.shape[0], X.shape[1] - cnn_width + 1, cnn_width, amino_acid_residues))
+    # print("res creation")
+    # print(res.shape)
     for i in range(X.shape[1] - cnn_width + 1):
         res[:, i, :, :] = X[:, i:i+cnn_width, :]
     res = np.reshape(res, (X.shape[0]*(X.shape[1] - cnn_width + 1), cnn_width, amino_acid_residues))
-    res = res[res.sum(axis=2).sum(axis=1)>11 , :, :]
+    # print("res after for")
+    # print(res.shape)
+    res = res[res.sum(axis=2).sum(axis=1)>int(cnn_width/2), :, :]
     return res
-    #remove padded values from res
 
 
 def get_dataset_reshaped():
@@ -89,20 +87,31 @@ def get_dataset_reshaped():
 
 
 def split_dataset(X, Y, seed=None):
-    X_tv, X_test, Y_tv, Y_test = train_test_split(X, Y, test_size=0.1, random_state=seed)
+    X_tv, X_test, Y_tv, Y_test = train_test_split(X, Y, test_size=0.2, random_state=seed)
     X_train, X_validation, Y_train, Y_validation = train_test_split(X_tv, Y_tv, test_size=0.1, random_state=seed)
     return X_train, X_validation, X_test, Y_train, Y_validation, Y_test
 
 
 if __name__ == '__main__':
     X, Y = get_dataset_reshaped()
+    Y_dist = np.sum(Y, axis=0)
+    print("Labels distribution")
+    print(Y_dist)
+    print(Y_dist / Y.shape[0])
+    print("X shape")
+    print(X.shape)
+    print("Y shape")
+    print(Y.shape)
     X_train, X_validation, X_test, Y_train, Y_validation, Y_test = split_dataset(X, Y)
-    # dataset = get_dataset()
-
-    # D_train, D_test, D_val = split_with_shuffle(dataset, 100)
-
-    # X_train, Y_train = get_data_labels(D_train)
-    # X_test, Y_test = get_data_labels(D_test)
-    # X_val, Y_val = get_data_labels(D_val)
-
-    # print("Dataset Loaded")
+    print("X_train shape")
+    print(X_train.shape)
+    print("X_validation shape")
+    print(X_validation.shape)
+    print("X_test shape")
+    print(X_test.shape)
+    print("Y_train shape")
+    print(Y_train.shape)
+    print("Y_validation shape")
+    print(Y_validation.shape)
+    print("Y_test shape")
+    print(Y_test.shape)

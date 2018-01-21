@@ -21,12 +21,14 @@
 # SOFTWARE.
 
 import numpy as np
+from time import time
 from keras import optimizers, callbacks
 from timeit import default_timer as timer
 from dataset import get_dataset_reshaped, split_dataset
 import model
 
-do_log = False
+do_log = True
+stop_early = False
 show_plots = True
 
 start_time = timer()
@@ -45,14 +47,16 @@ start_time = timer()
 
 history = None
 
+call_b = [model.checkpoint]
+
 if do_log:
-    history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[model.checkpoint,
-            callbacks.TensorBoard(log_dir="logs/test/{}".format(time()), histogram_freq=1, write_graph=True),
-            model.early_stop])
-else:
-    history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[model.checkpoint, model.early_stop])
+	call_b.append(callbacks.TensorBoard(log_dir="logs/convconvnet/{}".format(time()), histogram_freq=0, write_graph=False))
+
+if stop_early:
+	call_b.append(model.early_stop)
+
+history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,
+                        validation_data=(X_val, Y_val), callbacks=call_b)
 
 end_time = timer()
 print("\n\nTime elapsed: " + "{0:.2f}".format((end_time - start_time)) + " s")

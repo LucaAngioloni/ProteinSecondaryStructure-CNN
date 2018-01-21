@@ -33,10 +33,10 @@ import dataset
 
 do_summary = True
 
-LR = 0.007
+LR = 0.005
 drop_out = 0.4
-batch_dim = 64
-nn_epochs = 10
+batch_dim = 128
+nn_epochs = 30
 
 #loss = 'categorical_hinge' # ok
 loss = 'categorical_crossentropy' # best standart
@@ -53,15 +53,18 @@ checkpoint = callbacks.ModelCheckpoint(filepath, monitor='val_acc', verbose=1, s
 
 def CNN_model():
     m = Sequential()
-    m.add(Conv1D(128, 5, padding='same', activation='relu', input_shape=(dataset.cnn_width, dataset.amino_acid_residues)))  # <----
-    m.add(BatchNormalization())
+    m.add(Conv1D(64, 3, padding='same', activation='relu', input_shape=(dataset.cnn_width, dataset.amino_acid_residues)))  # <----
+    #m.add(BatchNormalization())
+    #m.add(MaxPooling1D(pool_size=2))
+    m.add(Dropout(drop_out))  # <----
+    m.add(Conv1D(128, 3, padding='same', activation='relu'))  # <----
+    #m.add(BatchNormalization())
     m.add(MaxPooling1D(pool_size=2))
     m.add(Dropout(drop_out))  # <----
     m.add(Conv1D(64, 3, padding='same', activation='relu'))  # <----
-    m.add(BatchNormalization())
-    m.add(MaxPooling1D(pool_size=2))
-    m.add(Dropout(drop_out))  # <----
+    m.add(Dropout(drop_out))
     m.add(Conv1D(32, 3, padding='same', activation='relu'))  # <----
+    # m.add(Dropout(drop_out))
     m.add(Flatten())
     m.add(Dense(64, activation='relu'))
     m.add(Dense(dataset.num_classes, activation = 'softmax'))

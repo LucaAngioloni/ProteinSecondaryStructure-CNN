@@ -39,7 +39,7 @@ print("\n\nTime elapsed getting Dataset: " + "{0:.2f}".format((end_time - start_
 net = model.CNN_model()
 
 #load Weights
-net.load_weights("Best Models/NewModel-best-05919-acc08788.hdf5")
+net.load_weights("NewModelConvConv-best.hdf5")
 
 scores = net.evaluate(X_test, Y_test)
 #print(scores)
