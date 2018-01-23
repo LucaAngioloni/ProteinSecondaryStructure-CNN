@@ -19,7 +19,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+import numpy as np
+import pickle
 import matplotlib.pyplot as plt
 
 def plot_history(history):
@@ -47,3 +48,8 @@ def plot_history(history):
     plt.xlabel('epoch')
     plt.legend(['train', 'validation'], loc='upper left')
     plt.show()
+
+if __name__ == '__main__':
+    pickle_in = open("lasthistory.pickle","rb")
+    history = pickle.load(pickle_in)
+    plot_history(history)

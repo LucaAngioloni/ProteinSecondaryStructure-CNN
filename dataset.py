@@ -39,19 +39,21 @@ amino_acid_residues = 21
 num_classes = 8
 
 
-cnn_width = 23
+cnn_width = 17
 
 
 def get_dataset(path="dataset/cullpdb+profile_6133.npy"):
     ds = np.load(path)
     ds = np.reshape(ds, (ds.shape[0], sequence_len, total_features))
-    ds = ds[:, :, 0:amino_acid_residues+ 1 + num_classes]  # remove unnecessary features
-    return ds
+    ret = np.zeros((ds.shape[0], ds.shape[1], amino_acid_residues + num_classes))
+    ret[:, :, 0:amino_acid_residues] = ds[:, :, 35:56]
+    ret[:, :, amino_acid_residues:] = ds[:, :, amino_acid_residues + 1:amino_acid_residues+ 1 + num_classes]
+    return ret
 
 
 def get_data_labels(D):
     X = D[:, :, 0:amino_acid_residues]
-    Y = D[:, :, amino_acid_residues + 1:amino_acid_residues+ 1 + num_classes]
+    Y = D[:, :, amino_acid_residues:amino_acid_residues + num_classes]
     return X, Y
 
 
@@ -76,9 +78,8 @@ def reshape_data(X):
     res = np.reshape(res, (X.shape[0]*(X.shape[1] - cnn_width + 1), cnn_width, amino_acid_residues))
     # print("res after for")
     # print(res.shape)
-    res = res[res.sum(axis=2).sum(axis=1)>int(cnn_width/2), :, :]
+    res = res[np.count_nonzero(res, axis=(1,2))>(int(cnn_width/2)*amino_acid_residues), :, :]
     return res
-
 
 def get_dataset_reshaped():
     D = get_dataset()
