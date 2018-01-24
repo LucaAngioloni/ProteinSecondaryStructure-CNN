@@ -34,7 +34,7 @@ import dataset
 do_summary = True
 
 LR = 0.0009
-drop_out = 0.38
+drop_out = 0.4
 batch_dim = 64
 nn_epochs = 50
 
