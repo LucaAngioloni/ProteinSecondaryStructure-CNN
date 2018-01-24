@@ -26,6 +26,7 @@
 
 import numpy as np
 from sklearn.model_selection import train_test_split
+import os
 
 
 dataset_path = "dataset/cullpdb+profile_6133.npy"
@@ -38,8 +39,10 @@ total_features = 57
 amino_acid_residues = 21
 num_classes = 8
 
-
 cnn_width = 17
+
+cached_X = "dataset/cached-Profiles-" + str(cnn_width) + ".npy"
+cached_Y = "dataset/cached-Labels.npy"
 
 
 def get_dataset(path="dataset/cullpdb+profile_6133.npy"):
@@ -82,17 +85,35 @@ def reshape_data(X):
     return res
 
 def get_dataset_reshaped():
-    D = get_dataset()
-    X, Y = get_data_labels(D)
-    X_reshaped = reshape_data(X)
-    Y_reshaped = resphape_labels(Y)
+    X_is_cached = os.path.exists(cached_X)
+    Y_is_cached = os.path.exists(cached_Y)
+    if X_is_cached and Y_is_cached:
+        X_reshaped = np.load(cached_X)
+        Y_reshaped = np.load(cached_Y)
 
-    return X_reshaped, Y_reshaped
+        return X_reshaped, Y_reshaped
+    else:
+        D = get_dataset() 
+        X, Y = get_data_labels(D)
+
+        if X_is_cached:
+            X_reshaped = np.load(cached_X)
+        else:
+            X_reshaped = reshape_data(X)
+            np.save(cached_X, X_reshaped)
+
+        if Y_is_cached:
+            Y_reshaped = np.load(cached_Y)
+        else:
+            Y_reshaped = resphape_labels(Y)
+            np.save(cached_Y, Y_reshaped)
+
+        return X_reshaped, Y_reshaped
 
 
 def split_dataset(X, Y, seed=None):
-    X_tv, X_test, Y_tv, Y_test = train_test_split(X, Y, test_size=0.2, random_state=seed)
-    X_train, X_validation, Y_train, Y_validation = train_test_split(X_tv, Y_tv, test_size=0.1, random_state=seed)
+    X_tv, X_test, Y_tv, Y_test = train_test_split(X, Y, test_size=0.05, random_state=seed)
+    X_train, X_validation, Y_train, Y_validation = train_test_split(X_tv, Y_tv, test_size=0.05, random_state=seed)
     return X_train, X_validation, X_test, Y_train, Y_validation, Y_test
 
 def split_like_paper(Dataset):
@@ -126,6 +147,7 @@ def get_cb513():
 
 
 if __name__ == '__main__':
+    print("Collectiong dataset...")
     X, Y = get_dataset_reshaped()
     Y_dist = np.sum(Y, axis=0)
     print("Labels distribution")

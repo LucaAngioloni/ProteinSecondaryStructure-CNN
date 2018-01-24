@@ -33,8 +33,8 @@ import dataset
 
 do_summary = True
 
-LR = 0.0009
-drop_out = 0.4
+LR = 0.0009 # maybe after some (10-15) epochs reduce it to 0.0008-0.0007
+drop_out = 0.38
 batch_dim = 64
 nn_epochs = 50
 
