@@ -33,10 +33,10 @@ import dataset
 
 do_summary = True
 
-LR = 0.002
-drop_out = 0.4
-batch_dim = 32
-nn_epochs = 10
+LR = 0.0005
+drop_out = 0.3
+batch_dim = 64
+nn_epochs = 20
 
 #loss = 'categorical_hinge' # ok
 loss = 'categorical_crossentropy' # best standart

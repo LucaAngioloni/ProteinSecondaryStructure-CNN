@@ -37,7 +37,7 @@ X_val, Y_val = get_data_labels(D_val)
 net = model.CNN_model()
 
 #load Weights
-net.load_weights("Whole-best.hdf5")
+net.load_weights("Whole_CullPDB-best.hdf5")
 
 predictions = net.predict(X_test)
 

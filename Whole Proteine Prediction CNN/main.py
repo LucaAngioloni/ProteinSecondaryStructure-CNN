@@ -27,6 +27,7 @@ from dataset import get_dataset, split_with_shuffle, get_data_labels, split_like
 import model
 
 do_log = False
+stop_early = False
 show_plots = True
 
 dataset = get_dataset()
@@ -43,14 +44,16 @@ start_time = timer()
 
 history = None
 
+call_b = [model.checkpoint]
+
 if do_log:
-    history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[model.checkpoint,
-            callbacks.TensorBoard(log_dir="../logs/Whole_CullPDB/{}".format(time()), histogram_freq=1, write_graph=True),
-            model.early_stop])
-else:
-    history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,
-                        validation_data=(X_val, Y_val), callbacks=[model.checkpoint, model.early_stop])
+    call_b.append(callbacks.TensorBoard(log_dir="logs/Whole_CullPDB/{}".format(time()), histogram_freq=0, write_graph=True))
+
+if stop_early:
+    call_b.append(model.early_stop)
+
+history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,
+                        validation_data=(X_val, Y_val), callbacks=call_b)
 
 end_time = timer()
 print("\n\nTime elapsed: " + "{0:.2f}".format((end_time - start_time)) + " s")
