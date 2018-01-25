@@ -28,9 +28,12 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import os
 
+filtered = True
 
-#dataset_path = "dataset/cullpdb+profile_6133.npy"
-dataset_path = "dataset/cullpdb+profile_6133_filtered.npy"
+if filtered:
+    dataset_path = "dataset/cullpdb+profile_6133_filtered.npy"
+else:
+    dataset_path = "dataset/cullpdb+profile_6133.npy"
 
 cb513_path = "dataset/cb513+profile_split1.npy"
 
@@ -41,9 +44,8 @@ num_classes = 8
 
 cnn_width = 17
 
-cached_X = "dataset/cached-Profiles-" + str(cnn_width) + ".npy"
-cached_Y = "dataset/cached-Labels.npy"
-
+def is_filtered():
+    return filtered
 
 def get_dataset(path="dataset/cullpdb+profile_6133.npy"):
     ds = np.load(path)
@@ -67,20 +69,13 @@ def resphape_labels(labels):
 
 
 def reshape_data(X):
-    # final shape should be (1278334, cnn_width, amino_acid_residues)
     padding = np.zeros((X.shape[0], X.shape[2], int(cnn_width/2)))
     X = np.dstack((padding, np.swapaxes(X, 1, 2), padding))
     X = np.swapaxes(X, 1, 2)
-    # print("XShape after padding")
-    # print(X.shape)
     res = np.zeros((X.shape[0], X.shape[1] - cnn_width + 1, cnn_width, amino_acid_residues))
-    # print("res creation")
-    # print(res.shape)
     for i in range(X.shape[1] - cnn_width + 1):
         res[:, i, :, :] = X[:, i:i+cnn_width, :]
     res = np.reshape(res, (X.shape[0]*(X.shape[1] - cnn_width + 1), cnn_width, amino_acid_residues))
-    # print("res after for")
-    # print(res.shape)
     res = res[np.count_nonzero(res, axis=(1,2))>(int(cnn_width/2)*amino_acid_residues), :, :]
     return res
 
@@ -144,7 +139,8 @@ def get_cb513():
 
 if __name__ == '__main__':
     print("Collectiong dataset...")
-    X, Y = get_dataset_reshaped()
+    D = get_dataset()
+    X, Y = get_data_labels(D)
     Y_dist = np.sum(Y, axis=0)
     print("Labels distribution")
     print(Y_dist)
@@ -153,16 +149,3 @@ if __name__ == '__main__':
     print(X.shape)
     print("Y shape")
     print(Y.shape)
-    X_train, X_validation, X_test, Y_train, Y_validation, Y_test = split_dataset(X, Y)
-    print("X_train shape")
-    print(X_train.shape)
-    print("X_validation shape")
-    print(X_validation.shape)
-    print("X_test shape")
-    print(X_test.shape)
-    print("Y_train shape")
-    print(Y_train.shape)
-    print("Y_validation shape")
-    print(Y_validation.shape)
-    print("Y_test shape")
-    print(Y_test.shape)

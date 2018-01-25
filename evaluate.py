@@ -24,18 +24,21 @@ import numpy as np
 from time import time
 from keras import optimizers, callbacks
 from timeit import default_timer as timer
-from dataset import get_dataset_reshaped, split_dataset, get_resphaped_dataset_paper, get_cb513
+from dataset import get_dataset_reshaped, split_dataset, get_resphaped_dataset_paper, get_cb513, is_filtered
 import model
+
+filtered = is_filtered()
 
 start_time = timer()
 
 print("Collecting Dataset...")
 
-# Split the dataset in 0.8 train, 0.1 test, 0.1 validation with shuffle (optionally seed)
-X_train, X_val, X_test, Y_train, Y_val, Y_test = get_dataset_reshaped(seed=100)
-
-# Slit the dataset with the same indexes used in the paper
-#X_train, X_val, X_test, Y_train, Y_val, Y_test = get_resphaped_dataset_paper()
+if filtered:
+    # Split the dataset in 0.8 train, 0.1 test, 0.1 validation with shuffle (optionally seed)
+    X_train, X_val, X_test, Y_train, Y_val, Y_test = get_dataset_reshaped(seed=100)
+else:
+    # Slit the dataset with the same indexes used in the paper (Only for CullPDB6133 not filtered)
+    X_train, X_val, X_test, Y_train, Y_val, Y_test = get_resphaped_dataset_paper()
 
 end_time = timer()
 print("\n\nTime elapsed getting Dataset: " + "{0:.2f}".format((end_time - start_time)) + " s")

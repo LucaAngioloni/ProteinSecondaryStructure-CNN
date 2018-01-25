@@ -46,7 +46,7 @@ history = None
 if do_log:
     history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,
                         validation_data=(X_val, Y_val), callbacks=[model.checkpoint,
-            callbacks.TensorBoard(log_dir="../logs/whole/{}".format(time()), histogram_freq=1, write_graph=True),
+            callbacks.TensorBoard(log_dir="../logs/Whole_CullPDB/{}".format(time()), histogram_freq=1, write_graph=True),
             model.early_stop])
 else:
     history = net.fit(X_train, Y_train, epochs=model.nn_epochs, batch_size=model.batch_dim, shuffle=True,

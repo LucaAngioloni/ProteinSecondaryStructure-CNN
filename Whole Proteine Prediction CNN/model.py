@@ -47,7 +47,7 @@ loss = 'categorical_crossentropy' # best standart
 early_stop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=1, verbose=0, mode='min')
 
 #filepath="NewModel-{epoch:02d}-{val_acc:.2f}.hdf5"
-filepath="Whole-best.hdf5"
+filepath="Whole_CullPDB-best.hdf5"
 checkpoint = callbacks.ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
 
