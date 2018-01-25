@@ -22,22 +22,21 @@
 
 import numpy as np
 
-dataset_path = "dataset/cullpdb+profile_6133.npy"
+dataset_path = "../dataset/cullpdb+profile_6133.npy"
 
 sequence_len = 700
 total_features = 57
-amino_acid_residues = 22
-num_classes = 9
-
-
-cnn_width = 22
+amino_acid_residues = 21
+num_classes = 8
 
 
 def get_dataset():
     ds = np.load(dataset_path)
     ds = np.reshape(ds, (ds.shape[0], sequence_len, total_features))
-    ds = ds[:, :, 0:amino_acid_residues + num_classes]  # remove unnecessary features
-    return ds
+    ret = np.zeros((ds.shape[0], ds.shape[1], amino_acid_residues + num_classes))
+    ret[:, :, 0:amino_acid_residues] = ds[:, :, 35:56]
+    ret[:, :, amino_acid_residues:] = ds[:, :, amino_acid_residues + 1:amino_acid_residues+ 1 + num_classes]
+    return ret
 
 
 def get_data_labels(D):
