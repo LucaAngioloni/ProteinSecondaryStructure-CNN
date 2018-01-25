@@ -29,8 +29,8 @@ from sklearn.model_selection import train_test_split
 import os
 
 
-dataset_path = "dataset/cullpdb+profile_6133.npy"
-# dataset_path = "dataset/cullpdb+profile_6133_filtered.npy"
+#dataset_path = "dataset/cullpdb+profile_6133.npy"
+dataset_path = "dataset/cullpdb+profile_6133_filtered.npy"
 
 cb513_path = "dataset/cb513+profile_split1.npy"
 
@@ -84,37 +84,33 @@ def reshape_data(X):
     res = res[np.count_nonzero(res, axis=(1,2))>(int(cnn_width/2)*amino_acid_residues), :, :]
     return res
 
-def get_dataset_reshaped():
-    X_is_cached = os.path.exists(cached_X)
-    Y_is_cached = os.path.exists(cached_Y)
-    if X_is_cached and Y_is_cached:
-        X_reshaped = np.load(cached_X)
-        Y_reshaped = np.load(cached_Y)
+def get_dataset_reshaped(seed=None):
+    D = get_dataset(dataset_path)
+    Train, Test, Validation = split_dataset(D)
+    X_te, Y_te = get_data_labels(Test)
+    X_tr, Y_tr = get_data_labels(Train)
+    X_v, Y_v = get_data_labels(Validation)
 
-        return X_reshaped, Y_reshaped
-    else:
-        D = get_dataset() 
-        X, Y = get_data_labels(D)
+    X_train = reshape_data(X_tr)
+    X_test = reshape_data(X_te)
+    X_validation = reshape_data(X_v)
 
-        if X_is_cached:
-            X_reshaped = np.load(cached_X)
-        else:
-            X_reshaped = reshape_data(X)
-            np.save(cached_X, X_reshaped)
+    Y_train = resphape_labels(Y_tr)
+    Y_test = resphape_labels(Y_te)
+    Y_validation = resphape_labels(Y_v)
 
-        if Y_is_cached:
-            Y_reshaped = np.load(cached_Y)
-        else:
-            Y_reshaped = resphape_labels(Y)
-            np.save(cached_Y, Y_reshaped)
-
-        return X_reshaped, Y_reshaped
-
-
-def split_dataset(X, Y, seed=None):
-    X_tv, X_test, Y_tv, Y_test = train_test_split(X, Y, test_size=0.05, random_state=seed)
-    X_train, X_validation, Y_train, Y_validation = train_test_split(X_tv, Y_tv, test_size=0.05, random_state=seed)
     return X_train, X_validation, X_test, Y_train, Y_validation, Y_test
+
+
+def split_dataset(Dataset, seed=None):
+    np.random.seed(seed)
+    np.random.shuffle(Dataset)
+    train_split = int(Dataset.shape[0]*0.8)
+    test_val_split = int(Dataset.shape[0]*0.1)
+    Train = Dataset[0:train_split, :, :]
+    Test = Dataset[train_split:train_split+test_val_split, :, :]
+    Validation = Dataset[train_split+test_val_split:, :, :]
+    return Train, Test, Validation
 
 def split_like_paper(Dataset):
     # Dataset subdivision following dataset readme and paper

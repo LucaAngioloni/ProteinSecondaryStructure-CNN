@@ -31,7 +31,11 @@ start_time = timer()
 
 print("Collecting Dataset...")
 
-X_train, X_val, X_test, Y_train, Y_val, Y_test = get_resphaped_dataset_paper()
+# Split the dataset in 0.8 train, 0.1 test, 0.1 validation with shuffle (optionally seed)
+X_train, X_val, X_test, Y_train, Y_val, Y_test = get_dataset_reshaped(seed=100)
+
+# Slit the dataset with the same indexes used in the paper
+#X_train, X_val, X_test, Y_train, Y_val, Y_test = get_resphaped_dataset_paper()
 
 end_time = timer()
 print("\n\nTime elapsed getting Dataset: " + "{0:.2f}".format((end_time - start_time)) + " s")
