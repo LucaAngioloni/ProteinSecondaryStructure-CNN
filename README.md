@@ -47,5 +47,11 @@ For the scope of this project the more challenging 8-state prediction problem ha
 
 ## References
 \[1\]: https://en.wikipedia.org/wiki/Protein_structure_prediction
+
 \[2\]: https://en.wikipedia.org/wiki/Protein_secondary_structure
+
 \[3\]: https://www.ebi.ac.uk/training/online/course/introduction-protein-classification-ebi/what-are-protein-signatures/signature-types/what-are-
+
+\[x\] Jian Zhou and Olga G. Troyanskaya (2014) - "Deep Supervised and Convolutional Generative Stochastic Network for Protein Secondary Structure Prediction" - https://arxiv.org/pdf/1403.1347.pdf
+
+\[x\] Sheng Wang et al. (2016) - "Protein Secondary Structure Prediction Using Deep Convolutional Neural Fields" - https://arxiv.org/pdf/1512.00843.pdf
