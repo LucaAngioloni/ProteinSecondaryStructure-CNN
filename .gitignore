@@ -107,4 +107,4 @@ ENV/
 dataset/*.npy
 
 #logs
-logs/
+logs/convconvnet
