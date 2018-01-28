@@ -1,6 +1,6 @@
 # Proteine Secondary Structure Predictor
 Proteine secondary structor predictor using CNN
-![proteine_banner](http://blog.nanostring.com/wp-content/uploads/2017/02/3Dbiology_Banner.jpg)
+![proteine_banner](images/proteine_banner.jpg)
 ___
 
 ## Introduction
@@ -59,7 +59,82 @@ In a first phase of research the whole aminoacid sequence was used as an examle 
 In the second phase, local windows of a limited number of elements, shifted along the sequence, were used as examples (`cnn_width` x 21) to predict the secondary structure (8 classes) in a single location in the center of each window. (The 'No Seq' and padding were removed and ignored in this phase because it wasn't necessary anymore for the sequences to be of the same length)
 
 ## Implementation
-Work in progress.
+This project was implemented using the **Keras** framework with the **Tensorflow** backend.
+
+Two main approaches have been explored:
+1. Use the whole protein sequence (primary structure) as an example for the CNN, with an output of dimension 700 x 9, the sequence of the predicted secondary structure.
+2. Use local windows of a limited number of elements as an example for the CNN which is shifted along the sequences, predicting for each window the secondary structure in a single location (8 classes), in the center of each window.
+
+### 1) Whole proteine prediction
+This simple model consists of 3 main 1D Convolutional Layers:
+
+```Python
+LR = 0.0005
+drop_out = 0.3
+batch_dim = 64
+
+loss = 'categorical_crossentropy'
+
+# We fix the window size to 11 because the average length of an alpha helix is around eleven residues
+# and that of a beta strand is around six.
+# See references [6].
+m = Sequential()
+m.add(Conv1D(128, 11, padding='same', activation='relu', input_shape=(dataset.sequence_len, dataset.amino_acid_residues)))
+m.add(Dropout(drop_out))
+m.add(Conv1D(64, 11, padding='same', activation='relu'))
+m.add(Dropout(drop_out))
+m.add(Conv1D(dataset.num_classes, 11, padding='same', activation='softmax'))
+opt = optimizers.Adam(lr=LR)
+m.compile(optimizer=opt,
+          loss=loss,
+          metrics=['accuracy', 'mae'])
+```
+The resulting computation graph (from tensorboard):
+
+![whole_graph](images/whole_graph.png)
+
+This was a first prototype, with a low number of parameters (125.512 trainable paramenters). A major problem with this approach, was the fact that the padding added to shorter sequences, still influenced the loss, calculated on the whole output sequence. ('categorical_crossentropy' loss from tensorwlow was used)
+
+This required the creation of a custom loss to take into account the outputs from the padding region, which is of different shape for each example.
+
+Soon this approach was abandoned.
+
+### 2) Window CNN
+This model implementation:
+```Python
+cnn_width = 17
+
+LR = 0.0009 # maybe after some (10-15) epochs reduce it to 0.0008-0.0007
+drop_out = 0.38
+batch_dim = 64
+
+loss = 'categorical_crossentropy'
+
+m = Sequential()
+m.add(Conv1D(128, 5, padding='same', activation='relu', input_shape=(cnn_width, dataset.amino_acid_residues)))
+m.add(BatchNormalization())
+m.add(Dropout(drop_out))
+m.add(Conv1D(128, 3, padding='same', activation='relu'))
+m.add(BatchNormalization())
+m.add(Dropout(drop_out))
+m.add(Conv1D(64, 3, padding='same', activation='relu'))
+m.add(BatchNormalization())
+m.add(Dropout(drop_out))
+m.add(Flatten())
+m.add(Dense(128, activation='relu'))
+m.add(Dense(32, activation='relu'))
+m.add(Dense(dataset.num_classes, activation = 'softmax'))
+opt = optimizers.Adam(lr=LR)
+m.compile(optimizer=opt,
+          loss=loss,
+          metrics=['accuracy', 'mae'])
+```
+
+The resulting computation graph (from tensorboard):
+
+![window_graph](images/window_graph.png)
+
+This model has 232.552 parameters (Trainable params: 231.912) and was trained on 946494 samples, validated on 120704 samples (windows).
 
 ## Results
 Work in progress.
