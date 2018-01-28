@@ -1,5 +1,6 @@
 # Proteine Secondary Structure Predictor
 Proteine secondary structor predictor using CNN
+![proteine_banner](http://blog.nanostring.com/wp-content/uploads/2017/02/3Dbiology_Banner.jpg)
 ___
 
 ## Introduction
