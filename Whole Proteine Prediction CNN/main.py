@@ -25,8 +25,9 @@ from keras import optimizers, callbacks
 from timeit import default_timer as timer
 from dataset import get_dataset, split_with_shuffle, get_data_labels, split_like_paper
 import model
+from time import time
 
-do_log = False
+do_log = True
 stop_early = False
 show_plots = True
 
@@ -47,7 +48,7 @@ history = None
 call_b = [model.checkpoint]
 
 if do_log:
-    call_b.append(callbacks.TensorBoard(log_dir="logs/Whole_CullPDB/{}".format(time()), histogram_freq=0, write_graph=True))
+    call_b.append(callbacks.TensorBoard(log_dir="../logs/Whole_CullPDB/{}".format(time()), histogram_freq=0, write_graph=True))
 
 if stop_early:
     call_b.append(model.early_stop)
