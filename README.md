@@ -162,7 +162,7 @@ The learning curves are shown below (in this model the loss is calculated withou
 |:---:|:---:|
 | Whole protein CNN Accuracy (Q8 Accuracy)| Whole protein CNN Loss |
 
-The accuracy on the test set achieved with this model is equal to `0.6952` (Q8 Accuracy), whis is pretty close to the results obtained with the Window CNN in a small fraction of the time required for the Window CNN.
+The accuracy on the test set achieved with this model is equal to `0.6966` (Q8 Accuracy), whis is pretty close to the results obtained with the Window CNN in a small fraction of the time required for the Window CNN.
 
 ## References
 \[1\]: https://en.wikipedia.org/wiki/Protein_structure_prediction
