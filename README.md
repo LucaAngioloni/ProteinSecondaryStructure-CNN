@@ -1,6 +1,6 @@
-# Proteine Secondary Structure Predictor
-Proteine secondary structor predictor using CNN
-![proteine_banner](images/proteine_banner.jpg)
+# Protein Secondary Structure Predictor
+Protein secondary structor predictor using CNN
+![protein_banner](images/protein_banner.jpg)
 ___
 
 ## Introduction
