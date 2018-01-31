@@ -42,7 +42,7 @@ For 8-state prediction, Alpha-helix is further sub-divided into three states: al
 
 For the scope of this project the more challenging 8-state prediction problem has been chosen.
 
-## The Dataset
+## Dataset
 The dataset used is CullPDB data set, consisting of 6133 proteins each of 39900 features.
 The 6133 proteins × 39900 features can be reshaped into 6133 proteins × 700 amino acids × 57 features.
 
@@ -141,7 +141,26 @@ The resulting computation graph (from tensorboard):
 This model has 232.552 parameters (Trainable params: 231.912) and was trained on 946494 samples, validated on 120704 samples (windows).
 
 ## Results
+The Window CNN has been trained with the CullPDB dataset split like described in [Dataset section](#Dataset) for 35 epochs.
+The learning curves are shown below:
 
+[![Window_Acc](images/WindowCNN_Accuracy.png)]() | [![Window_Loss](images/WindowCNN_Loss.png)]() 
+|:---:|:---:|
+| Window CNN Accuracy (Q8 Accuracy)| Window CNN Loss |
+
+The accuracy on the test set achieved with this model is equal to `0.721522` (Q8 Accuracy), which is comparable to the results obtained in [[5]](#references) and [[6]](#references) using different techniques.
+
+The model has also been trained with the filtered version of the dataset: `CullPDB6133+filtered` available at [[4]](#references) and tested with the public benchmark **CB513**. The accuracy obtained is equal to `0.6833` (Q8 Accuracy), again comparable with [[5]](#references) and [[6]](#references).
+
+#### Whole protein prediction
+This model has been trained with the CullPDB dataset split like described in [Dataset section](#Dataset) for 35 epochs.
+The learning curves are shown below (in this model the loss is calculated without taking the padding into account, so the resulting values are biased):
+
+[![Window_Acc](images/WholeCNN_Accuracy.png)]() | [![Window_Loss](images/WholeCNN_Loss.png)]() 
+|:---:|:---:|
+| Whole protein CNN Accuracy (Q8 Accuracy)| Whole protein CNN Loss |
+
+The accuracy on the test set achieved with this model is equal to `0.6952` (Q8 Accuracy), whis is pretty close to the results obtained with the Window CNN.
 
 ## References
 \[1\]: https://en.wikipedia.org/wiki/Protein_structure_prediction
