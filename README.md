@@ -60,7 +60,7 @@ In the second phase, local windows of a limited number of elements, shifted alon
 
 The Dataset (of 6133 proteins) was devided randomly into training (5600), validation (256) and testing (272) sets, as suggested by [[5]](#references) for the results shown below.
 
-However different splits of the dataset have been tested with equal results.
+However different splits of the dataset with different sizes have been tested with equal results.
 
 ## Implementation
 This project was implemented using the **Keras** framework with the **Tensorflow** backend.
