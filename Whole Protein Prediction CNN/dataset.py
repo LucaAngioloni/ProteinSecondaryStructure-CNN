@@ -33,8 +33,8 @@ amino_acid_residues = 21
 num_classes = 8
 
 
-def get_dataset():
-    ds = np.load(dataset_path)
+def get_dataset(path=dataset_path):
+    ds = np.load(path)
     ds = np.reshape(ds, (ds.shape[0], sequence_len, total_features))
     ret = np.zeros((ds.shape[0], ds.shape[1], amino_acid_residues + num_classes))
     ret[:, :, 0:amino_acid_residues] = ds[:, :, 35:56]
@@ -59,7 +59,13 @@ def split_like_paper(Dataset):
 def split_with_shuffle(Dataset, seed=None):
     np.random.seed(seed)
     np.random.shuffle(Dataset)
-    return split_like_paper(Dataset)
+    train_split = int(Dataset.shape[0]*0.8)
+    test_val_split = int(Dataset.shape[0]*0.1)
+    Train = Dataset[0:train_split, :, :]
+    Test = Dataset[train_split:train_split+test_val_split, :, :]
+    Validation = Dataset[train_split+test_val_split:, :, :]
+    return Train, Test, Validation
+
 
 def get_cb513():
     CB = get_dataset(cb513_path)

@@ -33,6 +33,7 @@ show_plots = True
 
 dataset = get_dataset()
 
+# D_train, D_test, D_val = split_like_paper(dataset)
 D_train, D_test, D_val = split_with_shuffle(dataset, 100)
 
 X_train, Y_train = get_data_labels(D_train)
@@ -48,6 +49,7 @@ history = None
 call_b = [model.checkpoint]
 
 if do_log:
+	# call_b.append(callbacks.TensorBoard(log_dir="../logs/Whole_CullPDB_Filtered/{}".format(time()), histogram_freq=0, write_graph=True))
     call_b.append(callbacks.TensorBoard(log_dir="../logs/Whole_CullPDB/{}".format(time()), histogram_freq=0, write_graph=True))
 
 if stop_early:

@@ -164,6 +164,8 @@ The learning curves are shown below (in this model the loss is calculated withou
 
 The accuracy on the test set achieved with this model is equal to `0.6966` (Q8 Accuracy), whis is pretty close to the results obtained with the Window CNN in a small fraction of the time required for the Window CNN.
 
+Moreover the accuracy obtained training on the filtered dataset and testing on the CB513 dataset, is equal to `0.6557` (Q8 Accuracy)
+
 ## References
 \[1\]: https://en.wikipedia.org/wiki/Protein_structure_prediction
 
