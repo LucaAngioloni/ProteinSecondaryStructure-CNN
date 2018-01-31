@@ -69,7 +69,7 @@ Two main approaches have been explored:
 1. Use the whole protein sequence (primary structure) as an example for the CNN, with an output of dimension 700 x 9, the sequence of the predicted secondary structure.
 2. Use local windows of a limited number of elements as an example for the CNN which is shifted along the sequences, predicting for each window the secondary structure in a single location (8 classes), in the center of each window.
 
-### 1) Whole proteine prediction
+### 1) Whole protein prediction
 This simple model consists of 3 main 1D Convolutional Layers:
 
 ```Python
