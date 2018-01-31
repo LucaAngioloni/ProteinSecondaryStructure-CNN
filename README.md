@@ -33,9 +33,9 @@ A protein’s polypeptide chain typically consist of around 200-300 amino acids,
 Proteins’ secondary structure determines structural states of local segments of amino acid residues in the protein. The alpha-helix state for instance forms a coiled up shape and the beta-strand forms a zig-zag like shape etc. The secondary structure of the protein is interesting because it, as mentioned in the introduction, reveals important chemical properties of the protein and because it can be used for further predicting it’s tertiary structure. When predicting protein's secondary structure we distinguish between **3-state SS** prediction and **8-state SS** prediction.
 
 For 3-state prediction the goal is to classify each amino acid into either:
-- alpha-helix, which is a regular state denoted by an ’H’
-- beta-strand, which is a regular state denoted by an ’E’
-- coil region, which is an irregular state denoted by a ’C’
+- alpha-helix, which is a regular state denoted by an ’H’.
+- beta-strand, which is a regular state denoted by an ’E’.
+- coil region, which is an irregular state denoted by a ’C’.
 The letters which denotes the above secondary structures are not to be confused with those which denotes the amino acids.
 
 For 8-state prediction, Alpha-helix is further sub-divided into three states: alpha-helix (’H’), 310 helix (’G’) and pi-helix (’I’). Beta-strand is sub-divided into: beta-strand (’E’) and beta-bride (’B’) and coil region is sub-divided into: high curvature loop (’S’), beta-turn (’T’) and irregular (’L’). [[2]](#references)
@@ -52,11 +52,11 @@ Among the 57 features, 22 represent the primary structure (20 aminoacids, 1 unkn
 
 The Protein profiles where used instead of the aminoacids residues.
 
-For a more detailed description of the dataset and for download see [[4]](#references)
+For a more detailed description of the dataset and for download see [[4]](#references).
 
 In a first phase of research the whole aminoacid sequence was used as an examle (700 x 22) to predict the whole secondary structure (label) (700 x 9).
 
-In the second phase, local windows of a limited number of elements, shifted along the sequence, were used as examples (`cnn_width` x 21) to predict the secondary structure (8 classes) in a single location in the center of each window. (The 'No Seq' and padding were removed and ignored in this phase because it wasn't necessary anymore for the sequences to be of the same length)
+In the second phase, local windows of a limited number of elements, shifted along the sequence, were used as examples (`cnn_width` x 21) to predict the secondary structure (8 classes) in a single location in the center of each window (The 'No Seq' and padding were removed and ignored in this phase because it wasn't necessary anymore for the sequences to be of the same length).
 
 The Dataset (of 6133 proteins) was devided randomly into training (5600), validation (256) and testing (272) sets, as suggested by [[5]](#references) for the results shown below.
 
@@ -97,7 +97,7 @@ The resulting computation graph (from tensorboard):
 
 ![whole_graph](images/whole_graph.png)
 
-This was a first prototype, with a low number of parameters (125.512 trainable paramenters). A major problem with this approach, was the fact that the padding added to shorter sequences, still influenced the loss, calculated on the whole output sequence. ('categorical_crossentropy' loss from tensorwlow was used)
+This was a first prototype, with a low number of parameters (125.512 trainable paramenters). A major problem with this approach, was the fact that the padding added to shorter sequences, still influenced the loss, calculated on the whole output sequence ('categorical_crossentropy' loss from tensorwlow was used).
 
 This required the creation of a custom loss to take into account the outputs from the padding region, which is of different shape for each example.
 
@@ -164,7 +164,7 @@ The learning curves are shown below (in this model the loss is calculated withou
 
 The accuracy on the test set achieved with this model is equal to `0.6966` (Q8 Accuracy), whis is pretty close to the results obtained with the Window CNN in a small fraction of the time required for the Window CNN.
 
-Moreover the accuracy obtained training on the filtered dataset and testing on the CB513 dataset, is equal to `0.6557` (Q8 Accuracy)
+Moreover the accuracy obtained training on the filtered dataset and testing on the CB513 dataset, is equal to `0.6557` (Q8 Accuracy).
 
 ## References
 \[1\]: https://en.wikipedia.org/wiki/Protein_structure_prediction
