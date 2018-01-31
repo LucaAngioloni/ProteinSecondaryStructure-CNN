@@ -58,6 +58,10 @@ In a first phase of research the whole aminoacid sequence was used as an examle 
 
 In the second phase, local windows of a limited number of elements, shifted along the sequence, were used as examples (`cnn_width` x 21) to predict the secondary structure (8 classes) in a single location in the center of each window. (The 'No Seq' and padding were removed and ignored in this phase because it wasn't necessary anymore for the sequences to be of the same length)
 
+The Dataset (of 6133 proteins) was devided randomly into training (5600), validation (256) and testing (272) sets, as suggested by [[5]](#references) for the results shown below.
+
+However different splits of the dataset have been tested with equal results.
+
 ## Implementation
 This project was implemented using the **Keras** framework with the **Tensorflow** backend.
 
@@ -137,7 +141,7 @@ The resulting computation graph (from tensorboard):
 This model has 232.552 parameters (Trainable params: 231.912) and was trained on 946494 samples, validated on 120704 samples (windows).
 
 ## Results
-Work in progress.
+
 
 ## References
 \[1\]: https://en.wikipedia.org/wiki/Protein_structure_prediction
