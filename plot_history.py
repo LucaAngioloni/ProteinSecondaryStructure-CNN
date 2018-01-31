@@ -23,6 +23,11 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 
+##
+## @brief      Function to plot a history (callback from Keras)
+##
+## @param      history  The history from Keras
+##
 def plot_history(history):
     # summarize history for accuracy
     plt.plot(history.history['acc'])

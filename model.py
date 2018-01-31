@@ -54,7 +54,11 @@ else:
 
 checkpoint = callbacks.ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
-
+##
+## @brief       Builds and returns the CNN model (Keras Sequential model). If do_summary, prints the model summary.
+##
+## @return      The CNN model.
+##
 def CNN_model():
     m = Sequential()
     m.add(Conv1D(128, 5, padding='same', activation='relu', input_shape=(dataset.cnn_width, dataset.amino_acid_residues)))
