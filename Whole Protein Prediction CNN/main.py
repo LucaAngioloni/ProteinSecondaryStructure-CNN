@@ -23,7 +23,7 @@
 import numpy as np
 from keras import optimizers, callbacks
 from timeit import default_timer as timer
-from dataset import get_dataset, split_with_shuffle, get_data_labels, split_like_paper
+from dataset import get_dataset, split_with_shuffle, get_data_labels, split_like_paper, get_cb513
 import model
 from time import time
 
@@ -62,6 +62,12 @@ print("\n\nTime elapsed: " + "{0:.2f}".format((end_time - start_time)) + " s")
 predictions = net.predict(X_test)
 
 print("\n\nQ8 accuracy: " + str(model.Q8_accuracy(Y_test, predictions)) + "\n\n")
+
+CB513_X, CB513_Y = get_cb513()
+
+predictions = net.predict(CB513_X)
+
+print("\n\nQ8 accuracy on CB513: " + str(model.Q8_accuracy(CB513_Y, predictions)) + "\n\n")
 
 if show_plots:
     from plot_history import plot_history

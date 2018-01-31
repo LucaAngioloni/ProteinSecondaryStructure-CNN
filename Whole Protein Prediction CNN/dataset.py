@@ -23,6 +23,9 @@
 import numpy as np
 
 dataset_path = "../dataset/cullpdb+profile_6133.npy"
+# dataset_path = "../dataset/cullpdb+profile_6133_filtered.npy"
+
+cb513_path = "../dataset/cb513+profile_split1.npy"
 
 sequence_len = 700
 total_features = 57
@@ -58,6 +61,10 @@ def split_with_shuffle(Dataset, seed=None):
     np.random.shuffle(Dataset)
     return split_like_paper(Dataset)
 
+def get_cb513():
+    CB = get_dataset(cb513_path)
+    X, Y = get_data_labels(CB)
+    return X, Y
 
 if __name__ == '__main__':
     dataset = get_dataset()
