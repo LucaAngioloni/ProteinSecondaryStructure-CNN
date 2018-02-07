@@ -138,6 +138,8 @@ The resulting computation graph (from tensorboard):
 
 ![window_graph](images/window_graph.png)
 
+The size of the window has been chosen to be bigger than 11 because the average length of an alpha helix is around eleven residues and that of a beta strand is around six (See references [6]). Multiple even sizes from 11 to 23 were tested, with 17 yielding the best results (performance/training time trade off).
+
 This model has 232.552 parameters (Trainable params: 231.912) and was trained on 946494 samples, validated on 120704 samples (windows).
 
 ## Results
