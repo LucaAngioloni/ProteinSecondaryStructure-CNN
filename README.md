@@ -46,7 +46,7 @@ For the scope of this project the more challenging 8-state prediction problem ha
 The dataset used is CullPDB data set, consisting of 6133 proteins each of 39900 features.
 The 6133 proteins × 39900 features can be reshaped into 6133 proteins × 700 amino acids × 57 features.
 
-The amino acid chains are described by a 700 × 57 vector to keep the data size consistent. The 700 denotes the peptide chain and the 57 denotes the number of features in each amino acid. When the end of a chain is reached the rest of the vector will simply be labeled as ’No Seq’ (a padding is applied).
+The amino acid chains are described by a 700 × 57 matrix to keep the data size consistent. The 700 denotes the peptide chain and the 57 denotes the number of features in each amino acid. When the end of a chain is reached the rest of the vector will simply be labeled as ’No Seq’ (a padding is applied).
 
 Among the 57 features, 22 represent the primary structure (20 aminoacids, 1 unknown or any amino acid, 1 'No Seq' -padding-), 22 the Protein Profiles (same as primary structure) and 9 are the secondary structure (8 possible states, 1 'No Seq' -padding-).
 
