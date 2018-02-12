@@ -6,9 +6,13 @@ ___
 ## Introduction
 Proteins are chains of amino acids joined together by peptide bonds. Many conformations of this chains are possible due to the many possible combinations of amino acids and rotation of the chain in multiple positions along the chain. It is these conformational changes that are responsible for differences in the three dimensional structure of proteins.
 
+![protein-molecule-structure](images/protein-molecule-structure.jpg)
+
 Protein structure prediction is one of the most important goals pursued by bioinformatics and theoretical chemistry; it is highly important in medicine (for example, in drug design) and biotechnology (for example, in the design of novel enzymes). [[1]](#references)
 
 When we talk about the structure of proteins, four different structure levels are mentioned: the primary, secondary, tertiary and quaternary structure.
+
+![Proteine_structures](images/Proteine_structures.jpg)
 
 Protein primary structure is the linear sequence of amino acids in a peptide or protein.
 
@@ -23,10 +27,15 @@ I focused on the primary and secondary structure (SS), more specifically on usin
 
 ## Protein Structures and Protein Data
 The primary structure of proteins are described by the sequence of amino acids on their polypeptide chain.
+
+![Aminoacids](images/Aminoacids.png)
+
 There are 20 natural occuring amino acids which, in a one letter notation, is denoted by: ’A’, ’C’, ’D’, ’E’, ’F’, ’G’, ’H’, ’I’, ’K’, ’L’, ’M’, ’N’, ’P’, ’Q’, ’R’, ’S’, ’T’, ’V’, ’W’, ’Y’. ’A’ standing for Alanine, ’C’ for Cysteine, ’D’ for Aspartic Acid etc. A 21st letter, ’X’, is sometimes used for denoting an unknown or any amino acid.
 
 Instead of using the  primary stracture as a simple indicator for the presence of one of the aminoacids, a more powerful primary structure representation has been used: **Protein Profiles**.
 These are used to take into account evolutionary neighborhoods and are used to model protein families and domains. They are built by converting multiple sequence alignments into position-specific scoring systems (PSSMs). Amino acids at each position in the alignment are scored according to the frequency with which they occur at that position. [[3]](#references)
+
+![Proteine_Profile](images/Proteine_Profile.png)
 
 A protein’s polypeptide chain typically consist of around 200-300 amino acids, but it can consist of far less or far more. The amino acids can occure at any position in a chain, meaning that even for a chain consisting of 4 amino acids, there are 204 possible distinct combinations. In the used [dataset](#the-dataset) the average protein chain cosists of 208 amino acids.
 
