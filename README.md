@@ -32,7 +32,7 @@ The primary structure of proteins are described by the sequence of amino acids o
 
 There are 20 natural occuring amino acids which, in a one letter notation, is denoted by: ’A’, ’C’, ’D’, ’E’, ’F’, ’G’, ’H’, ’I’, ’K’, ’L’, ’M’, ’N’, ’P’, ’Q’, ’R’, ’S’, ’T’, ’V’, ’W’, ’Y’. ’A’ standing for Alanine, ’C’ for Cysteine, ’D’ for Aspartic Acid etc. A 21st letter, ’X’, is sometimes used for denoting an unknown or any amino acid.
 
-Instead of using the  primary structure as a simple indicator for the presence of one of the aminoacids, a more powerful primary structure representation has been used: **Protein Profiles**.
+Instead of using the  primary structure as a simple indicator for the presence of one of the amino acids, a more powerful primary structure representation has been used: **Protein Profiles**.
 These are used to take into account evolutionary neighborhoods and are used to model protein families and domains. They are built by converting multiple sequence alignments into position-specific scoring systems (PSSMs). Amino acids at each position in the alignment are scored according to the frequency with which they occur at that position. [[3]](#references)
 
 ![Proteine_Profile](images/Proteine_Profile.png)
@@ -66,13 +66,13 @@ The 6133 proteins × 39900 features can be reshaped into 6133 proteins × 700 am
 
 The amino acid chains are described by a 700 × 57 matrix to keep the data size consistent. The 700 denotes the peptide chain and the 57 denotes the number of features in each amino acid. When the end of a chain is reached the rest of the vector will simply be labeled as ’No Seq’ (a padding is applied).
 
-Among the 57 features, 22 represent the primary structure (20 aminoacids, 1 unknown or any amino acid, 1 'No Seq' -padding-), 22 the Protein Profiles (same as primary structure) and 9 are the secondary structure (8 possible states, 1 'No Seq' -padding-).
+Among the 57 features, 22 represent the primary structure (20 amino acids, 1 unknown or any amino acid, 1 'No Seq' -padding-), 22 the Protein Profiles (same as primary structure) and 9 are the secondary structure (8 possible states, 1 'No Seq' -padding-).
 
-The Protein profiles where used instead of the aminoacids residues.
+The Protein profiles where used instead of the amino acids residues.
 
 For a more detailed description of the dataset and for download see [[4]](#references).
 
-In a first phase of research the whole aminoacid sequence was used as an examle (700 x 22) to predict the whole secondary structure (label) (700 x 9).
+In a first phase of research the whole amino acid sequence was used as an examle (700 x 22) to predict the whole secondary structure (label) (700 x 9).
 
 In the second phase, local windows of a limited number of elements, shifted along the sequence, were used as examples (`cnn_width` x 21) to predict the secondary structure (8 classes) in a single location in the center of each window (The 'No Seq' and padding were removed and ignored in this phase because it wasn't necessary anymore for the sequences to be of the same length).
 
