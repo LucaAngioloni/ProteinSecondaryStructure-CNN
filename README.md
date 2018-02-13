@@ -45,6 +45,7 @@ For 3-state prediction the goal is to classify each amino acid into either:
 - alpha-helix, which is a regular state denoted by an ’H’.
 - beta-strand, which is a regular state denoted by an ’E’.
 - coil region, which is an irregular state denoted by a ’C’.
+
 The letters which denotes the above secondary structures are not to be confused with those which denotes the amino acids.
 
 For 8-state prediction, Alpha-helix is further sub-divided into three states: alpha-helix (’H’), 310 helix (’G’) and pi-helix (’I’). Beta-strand is sub-divided into: beta-strand (’E’) and beta-bride (’B’) and coil region is sub-divided into: high curvature loop (’S’), beta-turn (’T’) and irregular (’L’). [[2]](#references)
