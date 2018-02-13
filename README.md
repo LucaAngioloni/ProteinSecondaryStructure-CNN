@@ -37,7 +37,7 @@ These are used to take into account evolutionary neighborhoods and are used to m
 
 ![Proteine_Profile](images/Proteine_Profile.png)
 
-A protein’s polypeptide chain typically consist of around 200-300 amino acids, but it can consist of far less or far more. The amino acids can occure at any position in a chain, meaning that even for a chain consisting of 4 amino acids, there are 204 possible distinct combinations. In the used [dataset](#the-dataset) the average protein chain cosists of 208 amino acids.
+A protein’s polypeptide chain typically consist of around 200-300 amino acids, but it can consist of far less or far more. The amino acids can occure at any position in a chain, meaning that even for a chain consisting of 4 amino acids, there are 204 possible distinct combinations. In the used [dataset](#the-dataset) the average protein chain consists of 208 amino acids.
 
 Proteins’ secondary structure determines structural states of local segments of amino acid residues in the protein. The alpha-helix state for instance forms a coiled up shape and the beta-strand forms a zig-zag like shape etc. The secondary structure of the protein is interesting because it, as mentioned in the introduction, reveals important chemical properties of the protein and because it can be used for further predicting it’s tertiary structure. When predicting protein's secondary structure we distinguish between **3-state SS** prediction and **8-state SS** prediction.
 
@@ -73,11 +73,11 @@ The Protein profiles where used instead of the amino acids residues.
 
 For a more detailed description of the dataset and for download see [[4]](#references).
 
-In a first phase of research the whole amino acid sequence was used as an examle (700 x 22) to predict the whole secondary structure (label) (700 x 9).
+In a first phase of research the whole amino acid sequence was used as an example (700 x 22) to predict the whole secondary structure (label) (700 x 9).
 
 In the second phase, local windows of a limited number of elements, shifted along the sequence, were used as examples (`cnn_width` x 21) to predict the secondary structure (8 classes) in a single location in the center of each window (The 'No Seq' and padding were removed and ignored in this phase because it wasn't necessary anymore for the sequences to be of the same length).
 
-The Dataset (of 6133 proteins) was devided randomly into training (5600), validation (256) and testing (272) sets, as suggested by [[5]](#references) for the results shown below.
+The Dataset (of 6133 proteins) was divided randomly into training (5600), validation (256) and testing (272) sets, as suggested by [[5]](#references) for the results shown below.
 
 However different splits of the dataset with different sizes have been tested with equal results.
 
@@ -116,7 +116,7 @@ The resulting computation graph (from tensorboard):
 
 ![whole_graph](images/whole_graph.png)
 
-This was a first prototype, with a low number of parameters (125.512 trainable paramenters). A major problem with this approach, was the fact that the padding added to shorter sequences, still influenced the loss, calculated on the whole output sequence ('categorical_crossentropy' loss from tensorwlow was used).
+This was a first prototype, with a low number of parameters (125.512 trainable parameters). A major problem with this approach, was the fact that the padding added to shorter sequences, still influenced the loss, calculated on the whole output sequence ('categorical_crossentropy' loss from tensorwlow was used).
 
 This required the creation of a custom loss to take into account the outputs from the padding region, which is of different shape for each example.
 
@@ -183,7 +183,7 @@ The learning curves are shown below (in this model the loss is calculated withou
 |:---:|:---:|
 | Whole protein CNN Accuracy (Q8 Accuracy)| Whole protein CNN Loss |
 
-The accuracy on the test set achieved with this model is equal to `0.6966` (Q8 Accuracy), whis is pretty close to the results obtained with the Window CNN in a small fraction of the time required for the Window CNN.
+The accuracy on the test set achieved with this model is equal to `0.6966` (Q8 Accuracy), which is pretty close to the results obtained with the Window CNN in a small fraction of the time required for the Window CNN.
 
 Moreover the accuracy obtained training on the filtered dataset and testing on the CB513 dataset, is equal to `0.6557` (Q8 Accuracy).
 
@@ -196,6 +196,6 @@ Moreover the accuracy obtained training on the filtered dataset and testing on t
 
 \[4\]: http://www.princeton.edu/%7Ejzthree/datasets/ICML2014/
 
-\[5\] Jian Zhou and Olga G. Troyanskaya (2014) - "Deep Supervised and Convolutional Generative Stochastic Network for Protein Secondary Structure Prediction" - https://arxiv.org/pdf/1403.1347.pdf
+\[5\]: Jian Zhou and Olga G. Troyanskaya (2014) - "Deep Supervised and Convolutional Generative Stochastic Network for Protein Secondary Structure Prediction" - https://arxiv.org/pdf/1403.1347.pdf
 
-\[6\] Sheng Wang et al. (2016) - "Protein Secondary Structure Prediction Using Deep Convolutional Neural Fields" - https://arxiv.org/pdf/1512.00843.pdf
+\[6\]: Sheng Wang et al. (2016) - "Protein Secondary Structure Prediction Using Deep Convolutional Neural Fields" - https://arxiv.org/pdf/1512.00843.pdf
