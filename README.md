@@ -49,6 +49,15 @@ The letters which denotes the above secondary structures are not to be confused 
 
 For 8-state prediction, Alpha-helix is further sub-divided into three states: alpha-helix (’H’), 310 helix (’G’) and pi-helix (’I’). Beta-strand is sub-divided into: beta-strand (’E’) and beta-bride (’B’) and coil region is sub-divided into: high curvature loop (’S’), beta-turn (’T’) and irregular (’L’). [[2]](#references)
 
+    E = extended strand, participates in β ladder
+    B = residue in isolated β-bridge
+    H = α-helix
+    G = 3-helix (3-10 helix)
+    I = 5-helix (π-helix)
+    T = hydrogen bonded turn
+    S = bend
+    _ = loop (any other type)
+
 For the scope of this project the more challenging 8-state prediction problem has been chosen.
 
 ## Dataset
