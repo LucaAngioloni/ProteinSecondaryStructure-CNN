@@ -166,7 +166,7 @@ The Window CNN has been trained with the CullPDB dataset split like described in
 
 The learning curves are shown below:
 
-[![Window_Acc](images/WindowCNN_Accuracy.png)]() | [![Window_Loss](images/WindowCNN_Loss.png)]() 
+![Window_Acc](images/WindowCNN_Accuracy.png) | ![Window_Loss](images/WindowCNN_Loss.png)
 |:---:|:---:|
 | Window CNN Accuracy (Q8 Accuracy)| Window CNN Loss |
 
@@ -179,9 +179,9 @@ This model has been trained with the CullPDB dataset split like described in [Da
 
 The learning curves are shown below (in this model the loss is calculated without taking the padding into account, so the resulting values are biased):
 
-[![Window_Acc](images/WholeCNN_Accuracy.png)]() | [![Window_Loss](images/WholeCNN_Loss.png)]() 
+![Window_Acc](images/WholeCNN_Accuracy.png) | ![Window_Loss](images/WholeCNN_Loss.png)
 |:---:|:---:|
-| Whole protein CNN Accuracy (Q8 Accuracy)| Whole protein CNN Loss |
+| Whole protein CNN Accuracy | Whole protein CNN Loss |
 
 The accuracy on the test set achieved with this model is equal to `0.6966` (Q8 Accuracy), which is pretty close to the results obtained with the Window CNN in a small fraction of the time required for the Window CNN.
 
