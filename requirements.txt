@@ -1,0 +1,6 @@
+# pip requirements
+numpy
+sklearn
+tensorflow
+keras
+matplotlib
