@@ -1,10 +1,10 @@
 # Protein Secondary Structure Predictor
-Protein secondary structor predictor using CNN
+Protein secondary structure predictor using CNN
 ![protein_banner](images/protein_banner.jpg)
 ___
 
 ## Introduction
-Proteins are chains of amino acids joined together by peptide bonds. Many conformations of this chains are possible due to the many possible combinations of amino acids and rotation of the chain in multiple positions along the chain. It is these conformational changes that are responsible for differences in the three dimensional structure of proteins.
+Proteins are chains of amino acids joined together by peptide bonds. Many conformations of this chains are possible due to the many possible combinations of amino acids and rotation of the chain in multiple positions along the chain. It is these conformation changes that are responsible for differences in the three dimensional structure of proteins.
 
 ![protein-molecule-structure](images/protein-molecule-structure.jpg)
 
