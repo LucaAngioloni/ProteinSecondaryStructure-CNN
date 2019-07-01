@@ -1,3 +1,6 @@
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/protein-secondary-structure-prediction-using-2/protein-secondary-structure-prediction-on-1)](https://paperswithcode.com/sota/protein-secondary-structure-prediction-on-1?p=protein-secondary-structure-prediction-using-2)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/protein-secondary-structure-prediction-using-2/protein-secondary-structure-prediction-on)](https://paperswithcode.com/sota/protein-secondary-structure-prediction-on?p=protein-secondary-structure-prediction-using-2)
+
 # Protein Secondary Structure Predictor
 Protein secondary structure predictor using CNN
 ![protein_banner](images/protein_banner.jpg)
